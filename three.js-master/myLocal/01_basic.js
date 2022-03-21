@@ -80,7 +80,7 @@ class App {
 
     update(time){
         time *= 0.001; // time을  분 단위로 바꿔줌
-        
+        console.log(time);
         this._cube.rotation.x = time;
         this._cube.rotation.y = time;
     }
