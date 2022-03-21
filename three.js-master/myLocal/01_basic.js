@@ -4,7 +4,7 @@ class App {
     constructor() {
         const divContainer = document.querySelector("#webgi-container");
         this._divContainer = divContainer;//App 클래스의 필드로 저장
-
+        
         const renderer = new THREE.WebGL1Renderer({ antialias: true});
         //THREE 객체의 WebGL1Renderer 를 antialias: true 로 설정하면
         //이를 통해 만들어지는 object는 경계선이 pixel의 계단형상으로 보이지 않고
@@ -23,10 +23,11 @@ class App {
         this._setupCamera();
         this._setupLight();
         this._setupModel();
-
+        
         window.onresize = this.resize.bind(this); 
         this.resize();
 
+        console.log(this.render);
         requestAnimationFrame(this.render.bind(this));
     }
 
@@ -60,7 +61,29 @@ class App {
         this._scene.add(cube);
         this._cube = cube;
     }
+
+    resize(){
+        const width = this._divContainer.clientWidth;
+        const height = this._divContainer.clientHeight;
+
+        this._camera.aspect = width / height;
+        this._camera.updateProjectionMatrix();
+
+        this._renderer.setSize(width, height);
+    }
     //https://www.youtube.com/watch?v=vjKuk5Vp93k 13:44/18:37 까지 봄. 이어서 보면 여기에 추가하기.
+    render(time) {//time 단위는 밀리초
+        this._renderer.render(this._scene, this._camera);
+        this.update(time);
+        requestAnimationFrame(this.render.bind(this));
+    }
+
+    update(time){
+        time *= 0.001; // time을  분 단위로 바꿔줌
+        
+        this._cube.rotation.x = time;
+        this._cube.rotation.y = time;
+    }
 }
 
 window.onload = function() {
